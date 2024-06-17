@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"> <!-- ไว้อ่านโค้ดภาษาไทย -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- ปรับขนาดหน้าจอให้เข้ากับขนาดของทุก device -->
+  <title>INDEX</title> <!-- ชื่อแท็บ -->
+  <!-- bootstrap -->
+  <!-- ภาษาไทยเก๋ๆ -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous"> 
+  <!-- logo คน และ แม่กุญแจ -->
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <!-- ลิงก์ไปที่ไฟล์ style.css -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <img src="img/rtaf.png" alt="rtaf" style="margin-right: 50px;" style="top: 50%;">
+  <div class="wrapper">
+    <form id="loginForm">
+      <h4>กรอกข้อมูลของท่านเพื่อตรวจสอบข้อมูล</h4> 
+      <div id="pairFields">
+          <div class="row">
+              <div class="input-box">
+                <input type="text" placeholder=" อีเมลทอ." id="username1" name="username1" required>
+              </div>
+              <div class="input-box">
+                <input type="password" placeholder=" เลขบัตรประชาชน" id="password1" name="password1" required>
+              </div>
+          </div>
+      </div>
+      <div class="checkbox-container">
+        <input type="checkbox" id="myCheckbox" onclick="handleCheckboxClick()">
+        <label for="myCheckbox" class="checkbox-label">ฉันยอมรับข้อกำหนด</label>
+      </div>
+      <button type="button" id="addPairButton" class="btn">เพิ่มบุคคล</button>
+      <button type="submit" class="btn">ตรวจสอบข้อมูล</button> <!-- ปุ่มกด login ไปหน้าถัดไป --> 
+    </form>
+    <div class="error" id="error-message"></div>
+
+<!-- javascript -->
+<script>
+    // Database
+    const users = [
+        { username: 'admin', password: '1111111111111' },
+        { username: 'jittakorn_sri', password: '1600501247061' },
+        { username: 'thanawat_sris', password: '1659902204883' }
+    ];
+    
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        event.preventDefault(); 
+    
+        const pairCount = document.getElementById('pairFields').children.length;
+        const pairs = [];
+
+        for (let i = 1; i <= pairCount; i++) {
+            const username = document.getElementById(`username${i}`).value;
+            const password = document.getElementById(`password${i}`).value;
+            
+            if (/^\d{13}$/.test(password)) {
+                const user = users.find(user => user.username === username && user.password === password);
+                if (user) {
+                    pairs.push({ username, password });
+                } else {
+                    const errorMessage = document.getElementById('error-message');
+                    errorMessage.textContent = `อีเมลทอ.และเลขบัตรประชาชนของอันดับที่ ${i} ไม่ตรงกัน`;
+                    errorMessage.style.color = 'red';
+                    return;
+                }
+            } else {
+                const errorMessage = document.getElementById('error-message');
+                errorMessage.textContent = `เลขบัตรประชาชนของอันดับที่ ${i} ต้องเป็นเลข 13 หลัก`;
+                errorMessage.style.color = 'red';
+                return;
+            }
+        }
+
+        localStorage.setItem("pairs", JSON.stringify(pairs));
+        location.assign("info.html"); 
+    });
+
+    document.getElementById('addPairButton').addEventListener('click', function() {
+        const pairCount = document.getElementById('pairFields').children.length + 1;
+        const newRow = document.createElement('div');
+        newRow.className = 'row';
+        newRow.innerHTML = `
+            <div class="input-box">
+              <input type="text" placeholder=" อีเมลทอ." id="username${pairCount}" name="username${pairCount}" required>
+            </div>
+            <div class="input-box">
+              <input type="password" placeholder=" เลขบัตรประชาชน" id="password${pairCount}" name="password${pairCount}" required>
+            </div>
+        `;
+        document.getElementById('pairFields').appendChild(newRow);
+    });
+</script>
+</body>
+</html>

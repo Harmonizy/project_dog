@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"> <!-- ไว้อ่านโค้ดภาษาไทย -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- ปรับขนาดหน้าจอให้เข้ากับขนาดของทุก device -->
+    <title>INFO</title> <!-- ชื่อแท็บ -->
+    <!-- bootstrap -->
+    <!-- ภาษาไทยเก๋ๆ -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous"> 
+    <!-- logo ถูกผิด-->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- ลิงก์ไปที่ไฟล์ style.css -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>ข้อมูลส่วนตัว</h1>
+        <div id="userList"></div>
+        <form action="index.html">
+            <button type="submit" class="btn">ย้อนกลับ</button>
+        </form>
+    </div>
+
+<!-- javascript -->
+<script>
+    const users = [
+        { username: 'admin', password: '1111111111111', name: "admin", sex: "ไม่ระบุ", age: "ไม่ระบุ" },
+        { username: 'jittakorn_sri', password: '1600501247061', name: "จ.ต.จิตรกร ศรีสุวรรณ์", sex: "ชาย", age: "22" },
+        { username: 'thanawat_sris', password: '1659902204883', name: "จ.ต.ธนวัฒน์ ศรีแสนพรหม", sex: "ชาย", age: "20" }
+    ];
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const userList = document.getElementById("userList");
+        const pairs = JSON.parse(localStorage.getItem("pairs")) || [];
+// สร้างบล็อกข้อมูลใหม่
+        pairs.forEach(pair => {
+            const user = users.find(user => user.username === pair.username);
+            if (user) {
+                const userDiv = document.createElement('div');
+                userDiv.className = 'user-info';
+                userDiv.innerHTML = `
+                    <h6><b>อีเมลทอ.: </b><span>${user.username}</span></h6>
+                    <h6><b>เลขบัตรประชาชน: </b><span>${pair.password}</span></h6>
+                    <h6><b>ชื่อสกุล: </b><span>${user.name}</span></h6>
+                    <h6><b>เพศ: </b><span>${user.sex}</span></h6>
+                    <h6><b>อายุ: </b><span>${user.age}</span></h6>
+                    <hr>
+                `;
+                userList.appendChild(userDiv);
+            } else {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error';
+                errorDiv.textContent = `User ${pair.username} not found`;
+                userList.appendChild(errorDiv);
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
